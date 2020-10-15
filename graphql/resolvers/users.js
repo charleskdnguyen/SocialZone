@@ -1,9 +1,19 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { UserInputError } = require('apollo-server-express')
+const { UserInputError } = require('apollo-server-express');
 
-const { validateRegisterInput } = require('../../utils/validators')
-const { SECRET_KEY } = require('../../config')
+const { validateRegisterInput, validateLoginInput } = require('../../utils/validators');
+const { SECRET_KEY } = require('../../config');
+
+generateToken = (user) => {
+  return jwt.sign({
+    id: user.id,
+    email: user.email,
+    username: user.username
+  }, SECRET_KEY, {
+    expiresIn: '1h'
+  });
+};
 
 module.exports = {
   Query: {
@@ -28,9 +38,10 @@ module.exports = {
       const { errors, valid } = validateRegisterInput(username, email, password, confirmPassword);
 
       if (!valid) {
-        throw new UserInputError('Errors', {errors})
+        throw new UserInputError('Errors', { errors });
       }
-      //! Make sure user doesn't already exist
+
+      // Make sure user doesn't already exist
       const existingUser = await context.prisma.user.findOne({
         where: {
           username: username,
@@ -42,7 +53,7 @@ module.exports = {
         errors: {
           username: 'This username is taken',
         }
-      })
+      });
 
       // Hash password and create an auth token
       password = await bcrypt.hash(password, 12);
@@ -54,17 +65,46 @@ module.exports = {
         }
       });
 
-      const token = await jwt.sign({
-        id: newUser.id,
-        email: newUser.email,
-        username: newUser.username
-      }, SECRET_KEY, {
-        expiresIn: '1h'
-      });
+      const token = await generateToken(newUser);
 
       return {
         ...newUser,
         id: newUser.id,
+        token,
+      };
+    },
+    login: async (_, {
+      username, password
+    }, context) => {
+      const { errors, valid } = await validateLoginInput(username, password);
+
+      if (!valid) {
+        throw new UserInputError('Errors', { errors });
+      }
+
+      const user = await context.prisma.user.findOne({
+        where: {
+          username,
+        }
+      });
+
+      if (!user) {
+        errors.general = 'User not found';
+        throw new UserInputError('Wrong credentials', { errors });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, user.password);
+
+      if (!passwordMatch) {
+        errors.general = 'Password do not match';
+        throw new UserInputError('Wrong credentials', { errors });
+      }
+
+      const token = await generateToken(user);
+
+      return {
+        ...user,
+        id: user.id,
         token,
       };
     }
