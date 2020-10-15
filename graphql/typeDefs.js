@@ -42,6 +42,8 @@ module.exports = gql`
     user: User!
     postComments: [Comment!]!
     postLikes: [Like!]
+    likeCount: Int!
+    commentCount: Int!
   }
   
   type Comment {
@@ -59,4 +61,8 @@ module.exports = gql`
   }
   
   scalar Date
+  
+  type Subscription {
+    newPost: Post!
+  }
 `

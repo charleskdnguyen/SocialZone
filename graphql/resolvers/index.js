@@ -1,9 +1,9 @@
 const { GraphQLScalarType } = require('graphql');
 
-const usersResolvers = require('./users')
-const postsResolvers = require('./posts')
-const commentsResolvers = require('./comments')
-const likesResolvers = require('./like')
+const usersResolvers = require('./users');
+const postsResolvers = require('./posts');
+const commentsResolvers = require('./comments');
+const likesResolvers = require('./like');
 
 module.exports = {
   Query: {
@@ -16,6 +16,9 @@ module.exports = {
     ...postsResolvers.Mutation,
     ...commentsResolvers.Mutation,
     ...likesResolvers.Mutation,
+  },
+  Subscription: {
+    ...postsResolvers.Subscription,
   },
   Post: {
     ...postsResolvers.Post,
@@ -42,4 +45,4 @@ module.exports = {
       return null;
     },
   }),
-}
+};

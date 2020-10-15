@@ -23,7 +23,7 @@ module.exports = {
     createPost: async (_, { body }, context) => {
       const user = await checkAuth(context);
 
-      return await context.prisma.post.create({
+      const newPost = await context.prisma.post.create({
         data: {
           body,
           user: {
@@ -33,6 +33,12 @@ module.exports = {
           }
         }
       });
+
+      context.pubsub.publish('NEW_POST', {
+        newPost,
+      })
+
+      return newPost;
     },
     deletePost: async (_, { id }, context) => {
       const user = checkAuth(context);
@@ -76,6 +82,34 @@ module.exports = {
         where: {
           id: parent.id,
         }
-      }).postLikes() || [],
+      }).postLikes() || []
+    ,
+    likeCount: async (parent, __, context) => {
+      const post = await context.prisma.post.findOne({
+        where: {
+          id: parent.id,
+        }
+      });
+      const allPostLikes = await context.prisma.like.findMany();
+
+      return allPostLikes.filter(like => Number(like.postId) === Number(post.id)).length;
+    }
+    ,
+    commentCount: async (parent, __, context) => {
+      const post = await context.prisma.post.findOne({
+        where: {
+          id: parent.id,
+        }
+      });
+
+      const allPostComments = await context.prisma.comment.findMany();
+
+      return allPostComments.filter(comment => Number(comment.postId) === Number(post.id)).length;
+    }
+  },
+  Subscription: {
+    newPost: {
+      subscribe: (_, __, context) => context.pubsub.asyncIterator('NEW_POST')
+    }
   }
 };

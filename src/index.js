@@ -1,4 +1,4 @@
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer, PubSub } = require('apollo-server-express');
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 
@@ -7,6 +7,8 @@ const resolvers = require('../graphql/resolvers');
 
 const prisma = new PrismaClient();
 
+const pubsub = new PubSub();
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -14,12 +16,15 @@ const server = new ApolloServer({
     return {
       prisma,
       req,
+      pubsub
     };
-  }
+  },
 });
 
 const app = express();
 
 server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, console.log(`Server is listening at http://localhost:4000${server.graphqlPath}`));
+app.listen(
+  { port: 4000 },
+  console.log(`Server is listening at http://localhost:4000${server.graphqlPath}`));
