@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server-express')
 
+const { validateRegisterInput } = require('../../utils/validators')
 const { SECRET_KEY } = require('../../config')
 
 module.exports = {
@@ -23,9 +24,12 @@ module.exports = {
         username, email, password, confirmPassword
       }
     }, context) => {
+      // validate user data
+      const { errors, valid } = validateRegisterInput(username, email, password, confirmPassword);
 
-      //! validate user data
-
+      if (!valid) {
+        throw new UserInputError('Errors', {errors})
+      }
       //! Make sure user doesn't already exist
       const existingUser = await context.prisma.user.findOne({
         where: {
