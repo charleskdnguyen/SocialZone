@@ -1,3 +1,4 @@
+const { AuthenticationError } = require('apollo-server-express');
 const checkAuth = require('../../utils/check-auth');
 
 module.exports = {
@@ -32,6 +33,27 @@ module.exports = {
           }
         }
       })
+    },
+    deletePost: async (_, { id }, context) => {
+      const user = checkAuth(context);
+
+      const post = await context.prisma.post.findOne({
+        where: {
+          id: Number(id),
+        }
+      })
+
+      if (user.id === post.userId) {
+        await context.prisma.post.delete({
+          where: {
+            id: Number(id),
+          }
+        });
+      } else {
+        throw new AuthenticationError('Action not allowed')
+      }
+
+      return post;
     }
   }
 };
