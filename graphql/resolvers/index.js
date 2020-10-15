@@ -2,29 +2,37 @@ const { GraphQLScalarType } = require('graphql');
 
 const usersResolvers = require('./users')
 const postsResolvers = require('./posts')
+const commentsResolvers = require('./comments')
 
 module.exports = {
   Query: {
     ...postsResolvers.Query,
     ...usersResolvers.Query,
+    ...commentsResolvers.Query,
   },
   Mutation: {
     ...usersResolvers.Mutation,
     ...postsResolvers.Mutation,
+    ...commentsResolvers.Mutation,
+  },
+  Post: {
+    ...postsResolvers.Post,
+  },
+  Comment: {
+    ...commentsResolvers.Comment,
   },
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
     parseValue(value) {
-      return new Date(value); // value from the client
+      return new Date(value);
     },
     serialize(value) {
-      const date = new Date(value);
-      return date; // value sent to the client
+      return new Date(value);
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
-        return parseInt(ast.value, 10); // ast value is always in string format
+        return parseInt(ast.value, 10);
       }
       return null;
     },

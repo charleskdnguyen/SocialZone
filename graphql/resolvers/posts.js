@@ -10,7 +10,7 @@ module.exports = {
         where: {
           id: Number(id)
         }
-      });
+      }) || [];
 
       if (post) {
         return post;
@@ -32,7 +32,7 @@ module.exports = {
             }
           }
         }
-      })
+      });
     },
     deletePost: async (_, { id }, context) => {
       const user = checkAuth(context);
@@ -41,7 +41,7 @@ module.exports = {
         where: {
           id: Number(id),
         }
-      })
+      });
 
       if (user.id === post.userId) {
         await context.prisma.post.delete({
@@ -50,10 +50,26 @@ module.exports = {
           }
         });
       } else {
-        throw new AuthenticationError('Action not allowed')
+        throw new AuthenticationError('Action not allowed');
       }
 
       return post;
     }
+  },
+  Post: {
+    user: async (parent, __, context) =>
+      await context.prisma.post.findOne({
+        where: {
+          id: parent.id
+        }
+      }).user()
+    ,
+    postComments: async (parent, __, context) =>
+      await context.prisma.post.findOne({
+        where: {
+          id: parent.id,
+        }
+      }).postComments()
+    ,
   }
 };

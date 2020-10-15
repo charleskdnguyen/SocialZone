@@ -19,9 +19,7 @@ module.exports = {
   Query: {
     getUsers: async (_, __, context) => {
       try {
-        const users = await context.prisma.user.findMany();
-
-        return users;
+        return await context.prisma.user.findMany() || [];
       } catch (err) {
         throw new Error(err);
       }
