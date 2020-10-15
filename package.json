@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon src/index.js",
 	"migrate:save": "npx prisma migrate save --experimental",
 	"migrate:up": "npx prisma migrate up --experimental",
 	"migrate:generate": "npx prisma generate"
