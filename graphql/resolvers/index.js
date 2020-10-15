@@ -23,6 +23,9 @@ module.exports = {
   Comment: {
     ...commentsResolvers.Comment,
   },
+  Like: {
+    ...likesResolvers.Like,
+  },
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',

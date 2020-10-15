@@ -50,5 +50,20 @@ module.exports = {
 
       return post;
     },
+  },
+  Like: {
+    likedPost: async (parent, __, context) =>
+      await context.prisma.like.findOne({
+        where: {
+          id: parent.id,
+        }
+      }).likedPost()
+    ,
+    likedBy: async (parent, __, context) =>
+      await context.prisma.like.findOne({
+        where: {
+          id: parent.id,
+        }
+      }).likedBy(),
   }
 };
