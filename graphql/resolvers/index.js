@@ -3,6 +3,7 @@ const { GraphQLScalarType } = require('graphql');
 const usersResolvers = require('./users')
 const postsResolvers = require('./posts')
 const commentsResolvers = require('./comments')
+const likesResolvers = require('./like')
 
 module.exports = {
   Query: {
@@ -14,6 +15,7 @@ module.exports = {
     ...usersResolvers.Mutation,
     ...postsResolvers.Mutation,
     ...commentsResolvers.Mutation,
+    ...likesResolvers.Mutation,
   },
   Post: {
     ...postsResolvers.Post,

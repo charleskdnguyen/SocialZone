@@ -71,5 +71,11 @@ module.exports = {
         }
       }).postComments()
     ,
+    postLikes: async (parent, __, context) =>
+      await context.prisma.post.findOne({
+        where: {
+          id: parent.id,
+        }
+      }).postLikes() || [],
   }
 };

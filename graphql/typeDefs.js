@@ -7,6 +7,7 @@ module.exports = gql`
     getPosts: [Post!]!
     getComment(id: ID!): Comment
     getComments: [Comment!]!
+    getLikes: [Like!]
   }
   
   type Mutation {
@@ -16,7 +17,7 @@ module.exports = gql`
     deletePost(id: ID!): Post
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
-    likedPost(postId: ID!): Post!
+    toggleLike(postId: ID!): Post!
   }
   
   input RegisterInput {
@@ -40,7 +41,7 @@ module.exports = gql`
     createdAt: Date
     user: User!
     postComments: [Comment!]!
-    likes: [Like!]!
+    postLikes: [Like!]
   }
   
   type Comment {
