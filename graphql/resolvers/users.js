@@ -27,7 +27,18 @@ module.exports = {
       //! validate user data
 
       //! Make sure user doesn't already exist
+      const existingUser = await context.prisma.user.findOne({
+        where: {
+          username: username,
+        }
+      });
 
+      // Send to front-end to show error message
+      if (existingUser) throw new UserInputError('Username is taken', {
+        errors: {
+          username: 'This username is taken',
+        }
+      })
 
       // Hash password and create an auth token
       password = await bcrypt.hash(password, 12);
