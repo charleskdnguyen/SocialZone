@@ -23,6 +23,8 @@ module.exports = {
     createPost: async (_, { body }, context) => {
       const user = await checkAuth(context);
 
+      if (body.trim() === '') throw new Error('Post body must not be empty');
+
       const newPost = await context.prisma.post.create({
         data: {
           body,
@@ -34,7 +36,7 @@ module.exports = {
         }
       });
 
-      context.pubsub.publish('NEW_POST', {
+      await context.pubsub.publish('NEW_POST', {
         newPost,
       })
 
