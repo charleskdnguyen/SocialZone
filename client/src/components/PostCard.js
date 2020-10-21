@@ -9,8 +9,7 @@ import DeleteButton from './DeleteButton';
 
 function PostCard(props) {
   const user = useContext(AuthContext);
-  console.log(user);
-  console.log(props);
+
   if (user.user) {
     return (
       <Card fluid>
