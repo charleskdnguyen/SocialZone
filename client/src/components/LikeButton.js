@@ -5,20 +5,14 @@ import gql from 'graphql-tag';
 import { Button, Icon, Label } from "semantic-ui-react";
 
 function LikeButton({ user, postLikes, likeCount, id }) {
-  console.log(user);
+
   const [liked, setLiked] = useState(false);
+
   useEffect(() => {
       if (user.user && postLikes.find(like => like.likedBy.username === user.user.username)) {
         setLiked(true);
-      } else {
-        setLiked(false);
-      }
-    },
-    [
-      user,
-      postLikes
-    ]
-  );
+      } else setLiked(false);
+  }, [user, postLikes]);
 
   const [likePost] = useMutation(LIKE_POST_MUTATION, {
     variables: { postId: id }
