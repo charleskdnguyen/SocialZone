@@ -7,7 +7,7 @@ import { AuthContext } from "../context/auth";
 import LikeButton from './LikeButton'
 
 function PostCard(props) {
-  const { user } = useContext(AuthContext);
+  const user = useContext(AuthContext);
 
   return (
     <Card fluid>
