@@ -9,3 +9,7 @@
   width: 400px;
   margin: auto;
 }
+
+.ui.teal.button:hover, .ui.teal.buttons .button:hover {
+  background-color: #00b5ad;
+}

@@ -11,11 +11,13 @@ export const CREATE_POST_MUTATION = gql`
       }
       postLikes {
         likedBy {
+          id
           username
         }
       }
       postComments {
         commentedBy {
+          id
           username
         }
       }
