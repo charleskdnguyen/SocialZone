@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { Grid, Transition, TransitionGroup } from 'semantic-ui-react';
+import { Grid, TransitionGroup } from 'semantic-ui-react';
 
 import { AuthContext } from "../context/auth";
 import PostCard from '../components/PostCard';
@@ -8,7 +8,7 @@ import PostForm from '../components/PostForm';
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
 function Home() {
-  const user = useContext(AuthContext);
+  const loggedUser = useContext(AuthContext);
 
   const {
     loading,
@@ -24,7 +24,7 @@ function Home() {
           <h1>Recent posts</h1>
         </Grid.Row>
         <Grid.Row>
-          {user && (
+          {loggedUser && (
             <Grid.Column>
               <PostForm/>
             </Grid.Column>

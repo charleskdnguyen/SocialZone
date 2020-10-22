@@ -52,6 +52,30 @@ module.exports = {
       });
 
       if (user.id === post.userId) {
+        const allUserComment = await context.prisma.comment.findMany();
+
+        const specificUserComments = allUserComment.filter(comment => comment.userId === user.id).map(foundUserComment => foundUserComment.id);
+
+        await context.prisma.comment.deleteMany({
+          where: {
+            id: {
+              in: specificUserComments
+            },
+          }
+        });
+
+        const allUserLikes = await context.prisma.like.findMany();
+
+        const specificUserLikes = allUserLikes.filter(like => like.userId === user.id).map(foundUserLike => foundUserLike.id);
+
+        await context.prisma.like.deleteMany({
+          where: {
+            id: {
+              in: specificUserLikes
+            }
+          }
+        })
+
         await context.prisma.post.delete({
           where: {
             id: Number(id),
