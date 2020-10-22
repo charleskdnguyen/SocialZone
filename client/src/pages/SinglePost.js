@@ -14,7 +14,7 @@ function SinglePost(props) {
 
   const [comment, setComment] = useState('');
 
-  const { user } = useContext(AuthContext);
+  const { loggedUser } = useContext(AuthContext);
 
   const commentInputRef = useRef(null);
 
@@ -37,17 +37,23 @@ function SinglePost(props) {
     }
   });
 
-  function deletePostCallback() {
-    props.history.push('/');
-  }
-
   const fetchedPosts = data ? data.getPost : null;
 
   let postMarkup;
   if (!fetchedPosts) {
     postMarkup = <p>Loading Post...</p>;
   } else {
-    const { id, body, createdAt, postComments, postLikes, likeCount, commentCount } = fetchedPosts;
+    const {
+      id,
+      body,
+      createdAt,
+      user,
+      postComments,
+      postLikes,
+      likeCount,
+      commentCount
+    } = fetchedPosts;
+
     postMarkup = (
       <Grid>
         <Grid.Row>
@@ -68,7 +74,7 @@ function SinglePost(props) {
               <hr/>
               <Card.Content extra>
                 <LikeButton {...{
-                  user: user,
+                  user: loggedUser,
                   id: id,
                   postLikes: postLikes,
                   likeCount: likeCount
@@ -86,12 +92,9 @@ function SinglePost(props) {
                     </Label>
                   </Button>
                 </MyPopup>
-                {/*{user && user.username === fetchedPosts.post.user.username && (*/}
-                {/*  <DeleteButton postId={id} callback={deletePostCallback}/>*/}
-                {/*)}*/}
               </Card.Content>
             </Card>
-            {user && (
+            {loggedUser && (
               <Card fluid>
                 <Card.Content>
                   <p>Post a comment</p>
@@ -121,7 +124,7 @@ function SinglePost(props) {
             {postComments.map(comment => (
               <Card fluid key={comment.id}>
                 <Card.Content>
-                  {user && user.username === comment.commentedBy.username && (
+                  {loggedUser && loggedUser.username === comment.commentedBy.username && (
                     <DeleteButton postId={id} commentId={comment.id}/>
                   )}
                   <Card.Header>{comment.commentedBy.username}</Card.Header>

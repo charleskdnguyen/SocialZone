@@ -17,6 +17,7 @@ function DeleteButton({ postId, commentId, callback }) {
       setConfirmOpen(false);
 
       if (!commentId) {
+
         const data = proxy.readQuery({
           query: FETCH_POSTS_QUERY,
         });
