@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { useMutation } from "@apollo/client";
 
 import { FETCH_POSTS_QUERY } from "../util/graphql";
+import MyPopup from "../util/MyPopup";
 
 function DeleteButton({ postId, commentId, callback }) {
 
@@ -18,9 +19,9 @@ function DeleteButton({ postId, commentId, callback }) {
       if (!commentId) {
         const data = proxy.readQuery({
           query: FETCH_POSTS_QUERY,
-        })
+        });
 
-        data.getPosts = data.getPosts.filter(post => post.id !== postId)
+        data.getPosts = data.getPosts.filter(post => post.id !== postId);
 
         proxy.writeQuery({
           query: FETCH_POSTS_QUERY,
@@ -38,14 +39,20 @@ function DeleteButton({ postId, commentId, callback }) {
 
   return (
     <>
-      <Button
-        as="div"
-        color="red"
-        floated="right"
-        onClick={() => setConfirmOpen(true)}
+      <MyPopup
+        content={commentId
+          ? "Delete comment"
+          : "Delete post"}
       >
-        <Icon name="trash" style={{ margin: 0 }}/>
-      </Button>
+        <Button
+          as="div"
+          color="red"
+          floated="right"
+          onClick={() => setConfirmOpen(true)}
+        >
+          <Icon name="trash" style={{ margin: 0 }}/>
+        </Button>
+      </MyPopup>
       <Confirm
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}

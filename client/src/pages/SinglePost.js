@@ -8,6 +8,7 @@ import LikeButton from "../components/LikeButton";
 import { AuthContext } from "../context/auth";
 import DeleteButton from "../components/DeleteButton";
 import { useMutation } from "@apollo/client";
+import MyPopup from "../util/MyPopup";
 
 function SinglePost(props) {
 
@@ -72,15 +73,19 @@ function SinglePost(props) {
                   postLikes: postLikes,
                   likeCount: likeCount
                 }} />
-                <Button as="div" labelPosition="right" onClick={() => console.log('Comment on post')}
+                <MyPopup
+                  content={"Comment on post"}
                 >
-                  <Button basic color="blue">
-                    <Icon name="comments"/>
+                  <Button as="div" labelPosition="right" onClick={() => console.log('Comment on post')}
+                  >
+                    <Button basic color="blue">
+                      <Icon name="comments"/>
+                    </Button>
+                    <Label basic color="blue" pointing="left">
+                      {commentCount}
+                    </Label>
                   </Button>
-                  <Label basic color="blue" pointing="left">
-                    {commentCount}
-                  </Label>
-                </Button>
+                </MyPopup>
                 {/*{user && user.username === fetchedPosts.post.user.username && (*/}
                 {/*  <DeleteButton postId={id} callback={deletePostCallback}/>*/}
                 {/*)}*/}
