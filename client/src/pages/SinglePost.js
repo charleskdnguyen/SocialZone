@@ -9,6 +9,7 @@ import { AuthContext } from "../context/auth";
 import DeleteButton from "../components/DeleteButton";
 import { useMutation } from "@apollo/client";
 import MyPopup from "../util/MyPopup";
+import { FETCH_POST_QUERY, SUBMIT_COMMENT_MUTATION } from '../util/graphql'
 
 function SinglePost(props) {
 
@@ -140,52 +141,5 @@ function SinglePost(props) {
   }
   return postMarkup;
 }
-
-const SUBMIT_COMMENT_MUTATION = gql`
-  mutation($postId: ID!, $body: String!) {
-    createComment(postId: $postId, body: $body) {
-      id
-      createdAt
-      body
-      commentedBy {
-        id
-        username
-      }
-      commentedPost {
-        commentCount
-      }
-    }
-  }
-`;
-
-const FETCH_POST_QUERY = gql`
-  query($postId: ID!) {
-    getPost(id: $postId) {
-      id
-      body
-      createdAt
-      likeCount
-      postComments {
-        id
-        commentedBy {
-          id
-          username
-        }
-        body
-        createdAt
-      }
-      postLikes {
-        likedBy {
-          username
-        }
-      }
-      commentCount
-      user {
-        id
-        username
-      }
-    }
-  }
-`;
 
 export default SinglePost;

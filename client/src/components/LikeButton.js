@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { Button, Icon, Label } from "semantic-ui-react";
 
 import MyPopup from "../util/MyPopup";
+import { LIKE_POST_MUTATION } from "../util/graphql";
 
 function LikeButton({ user, postLikes, likeCount, id }) {
   const [liked, setLiked] = useState(false);
@@ -13,7 +14,12 @@ function LikeButton({ user, postLikes, likeCount, id }) {
       if (user && postLikes.find(like => like.likedBy.username === user.username)) {
         setLiked(true);
       } else setLiked(false);
-  }, [user, postLikes]);
+    },
+    [
+      user,
+      postLikes
+    ]
+  );
 
   const [likePost] = useMutation(LIKE_POST_MUTATION, {
     variables: { postId: id }
@@ -22,16 +28,16 @@ function LikeButton({ user, postLikes, likeCount, id }) {
   const likeButton = user ? (
     liked ? (
       <Button color="teal">
-        <Icon name="heart" />
+        <Icon name="heart"/>
       </Button>
     ) : (
       <Button color="teal" basic>
-        <Icon name="heart" />
+        <Icon name="heart"/>
       </Button>
     )
   ) : (
     <Button as={Link} to="/login" color="teal" basic>
-      <Icon name="heart" />
+      <Icon name="heart"/>
     </Button>
   );
 
@@ -44,13 +50,5 @@ function LikeButton({ user, postLikes, likeCount, id }) {
     </Button>
   );
 }
-
-const LIKE_POST_MUTATION = gql`
-  mutation likePost($postId: ID!) {
-    toggleLike(postId: $postId) {
-      id
-    }
-  }
-`;
 
 export default LikeButton;
