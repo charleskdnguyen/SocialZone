@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
+    "serve": "node src/index.js",
     "migrate:save": "npx prisma migrate save --experimental",
     "migrate:up": "npx prisma migrate up --experimental",
     "migrate:generate": "npx prisma generate"
@@ -16,9 +17,13 @@
     "@prisma/client": "^2.9.0",
     "apollo-server-express": "^2.18.2",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "graphql": "^15.3.0",
     "jsonwebtoken": "^8.5.1",
-    "nodemon": "^2.0.5"
+    "nodemon": "^2.0.5",
+    "react-router-dom": "^5.2.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.0"
   },
   "devDependencies": {
     "@prisma/cli": "^2.9.0"

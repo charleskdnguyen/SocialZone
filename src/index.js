@@ -1,7 +1,7 @@
 const { ApolloServer, PubSub } = require('apollo-server-express');
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-
+const cors = require('cors')
 const typeDefs = require('../graphql/typeDefs');
 const resolvers = require('../graphql/resolvers');
 
@@ -23,8 +23,10 @@ const server = new ApolloServer({
 
 const app = express();
 
+app.use(cors())
+
 server.applyMiddleware({ app });
 
 app.listen(
-  { port: 4000 },
-  console.log(`Server is listening at http://localhost:4000${server.graphqlPath}`));
+  { port: 5000 },
+  console.log(`Server is listening at http://localhost:5000${server.graphqlPath}`));
