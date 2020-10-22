@@ -52,10 +52,15 @@ module.exports = {
       });
 
       if (user.id === post.userId) {
+        // Delete all comments belonging to the post
         const allUserComment = await context.prisma.comment.findMany();
-
-        const specificUserComments = allUserComment.filter(comment => comment.userId === user.id).map(foundUserComment => foundUserComment.id);
-
+        
+        const specificUserComments = allUserComment
+        .filter(comment => 
+          comment.userId === user.id && 
+          comment.postId === post.id)
+        .map(foundUserComment => foundUserComment.id);
+        
         await context.prisma.comment.deleteMany({
           where: {
             id: {
@@ -64,10 +69,15 @@ module.exports = {
           }
         });
 
+        // Delete all likes belonging to the post
         const allUserLikes = await context.prisma.like.findMany();
 
-        const specificUserLikes = allUserLikes.filter(like => like.userId === user.id).map(foundUserLike => foundUserLike.id);
-
+        const specificUserLikes = allUserLikes
+        .filter(like => 
+          like.userId === user.id && 
+          like.postId === post.id)
+        .map(foundUserLike => foundUserLike.id);
+        
         await context.prisma.like.deleteMany({
           where: {
             id: {
